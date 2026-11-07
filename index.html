@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>REMII · HQ</title>
+<style>html,body{height:100%;margin:0;background:#03060a;color:#7dffb0;font:600 13px ui-monospace,Menlo,monospace;letter-spacing:.35em;
+display:flex;align-items:center;justify-content:center;text-align:center}</style></head>
+<body><div id="m">CONNECTING TO REMII HQ…</div>
+<script>
+// Permanent address for Remii HQ. The key after # stays in the browser (never sent to GitHub); target.json holds
+// only the current tunnel host, kept fresh by the server's keepalive job.
+(async () => {
+  const key = location.hash.slice(1);
+  const m = document.getElementById("m");
+  if (!key) { m.textContent = "REMII HQ · PRIVATE"; return; }
+  try {
+    const r = await fetch("target.json?t=" + Date.now(), { cache: "no-store" });
+    const { host } = await r.json();
+    location.replace(host + "/" + encodeURIComponent(key) + "/");
+  } catch (e) { m.textContent = "HQ OFFLINE · TRY AGAIN IN A MINUTE"; }
+})();
+</script></body></html>
