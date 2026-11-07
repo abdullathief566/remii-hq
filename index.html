@@ -12,8 +12,14 @@ display:flex;align-items:center;justify-content:center;text-align:center}</style
   const m = document.getElementById("m");
   if (!key) { m.textContent = "REMII HQ · PRIVATE"; return; }
   try {
-    const r = await fetch("target.json?t=" + Date.now(), { cache: "no-store" });
-    const { host } = await r.json();
+    let host;
+    try {  // GitHub API = always fresh (Pages caches files ~10 min)
+      const r = await fetch("https://api.github.com/repos/abdullathief566/remii-hq/contents/target.json?ref=main",
+        { cache: "no-store", headers: { Accept: "application/vnd.github.raw+json" } });
+      host = (await r.json()).host;
+    } catch (e) {
+      host = (await (await fetch("target.json?t=" + Date.now(), { cache: "no-store" })).json()).host;
+    }
     location.replace(host + "/" + encodeURIComponent(key) + "/");
   } catch (e) { m.textContent = "HQ OFFLINE · TRY AGAIN IN A MINUTE"; }
 })();
